@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بانگهێشتنامەی هاوسەرگیری</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f4ece1;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .card-container {
+      position: relative;
+      width: 350px;
+      min-height: 550px;
+      background: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .envelope-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      pointer-events: auto;
+      transition: opacity 1s ease 1.2s, visibility 1s ease 1.2s;
+    }
+
+    .envelope-wrapper.open {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .flap {
+      position: absolute;
+      background: #fdfaf6;
+      border: 1px solid #e2d7c5;
+      transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .flap-top {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top;
+    }
+
+    .flap-bottom {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      transform-origin: bottom;
+    }
+
+    .flap-left {
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+      transform-origin: left;
+    }
+
+    .flap-right {
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 100%;
+      clip-path: polygon(100% 0, 100% 100%, 0 50%);
+      transform-origin: right;
+    }
+
+    .seal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 65px;
+      height: 65px;
+      background: radial-gradient(circle, #e6ca65 0%, #b8860b 100%);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      cursor: pointer;
+      z-index: 15;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .seal:hover {
+      transform: translate(-50%, -50%) scale(1.08);
+      box-shadow: 0 6px 15px rgba(184, 134, 11, 0.4);
+    }
+
+    .open .flap-top { transform: rotateX(180deg); }
+    .open .flap-bottom { transform: rotateX(-180deg); }
+    .open .flap-left { transform: rotateY(-180deg); }
+    .open .flap-right { transform: rotateY(180deg); }
+    .open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+
+    .content {
+      width: 100%;
+      padding: 40px 20px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease 1s, transform 1s ease 1s;
+    }
+
+    .envelope-wrapper.open + .content {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #ffd700;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: floatUp 2s linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(0.2);
+      }
+    }
+
+    h1 {
+      color: #7a5c29;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #555;
+      font-size: 14px;
+      line-height: 1.8;
+      margin-bottom: 15px;
+    }
+
+    .date-box {
+      background: #fdfaf6;
+      border: 1px dashed #d4af37;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card-container">
+    <div class="envelope-wrapper" id="envelope" onclick="openEnvelope(event)">
+      <div class="flap flap-top"></div>
+      <div class="flap flap-bottom"></div>
+      <div class="flap flap-left"></div>
+      <div class="flap flap-right"></div>
+      <div class="seal">S & L</div>
+    </div>
+
+    <div class="content">
+      <p>بەخێر بێن بۆ داوەتنامەی هاوسەرگیری</p>
+      <h1>سامان & لڤێن</h1>
+      <p>زۆر خۆشحاڵ دەبین بە ئامادەبوونتان لە ئاهەنگەکەماندا</p>
+      
+      <div class="date-box">
+        <p><strong>بەرواری ئاهەنگ:</strong></p>
+        <p>١٥ / ١٠ / ٢٠٢٦</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openEnvelope(event) {
+      const envelope = document.getElementById('envelope');
+      if (!envelope.classList.contains('open')) {
+        envelope.classList.add('open');
+        createSparkles(event.clientX, event.clientY);
+      }
+    }
+
+    function createSparkles(x, y) {
+      for (let i = 0; i < 30; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        
+        const offsetX = (Math.random() - 0.5) * 200;
+        const offsetY = (Math.random() - 0.5) * 200;
+        
+        sparkle.style.left = (x + offsetX) + 'px';
+        sparkle.style.top = (y + offsetY) + 'px';
+        
+        document.body.appendChild(sparkle);
+        
+        setTimeout(() => {
+          sparkle.remove();
+        }, 2000);
+      }
+    }
+  </script>
+
+</body>
+</html>
